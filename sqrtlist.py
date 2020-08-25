@@ -18,7 +18,7 @@ class SqrtList:
             curr = curr.nxt
         if self.size > 0:
             res = res[:-2]
-        res += ']'#+ ' || ' + str(self.meta)
+        res += ']' + ' || ' + str(self.meta)
         return res
 
     def __len__(self):
@@ -37,8 +37,6 @@ class SqrtList:
             curr = curr.nxt
 
     def getNode(self, idx):
-        if idx > self.size:
-            return None
         if self.m == 0:
             return self.tail
         mIdx = idx // floor(sqrt(self.m))
@@ -47,8 +45,9 @@ class SqrtList:
             mIdx -= 1
             remaining += floor(sqrt(self.m))
         curr = self.meta.get(mIdx)
-        for i in range(remaining):
+        while remaining > 0 and curr != None:
             curr = curr.nxt
+            remaining -= 1
         return curr
 
     def advance(self, removalIdx):
@@ -59,7 +58,11 @@ class SqrtList:
             startIdx += 1
         curr = self.meta.getNode(startIdx)
         while curr.val != None:
-            curr.val = curr.val.nxt
+            if curr.val.nxt.val != None:
+                curr.val = curr.val.nxt
+            else:
+                self.buildMeta()
+                break
             curr = curr.nxt
 
     def retreat(self, insertionIdx):
@@ -83,7 +86,7 @@ class SqrtList:
         atIdx = self.getNode(idx)
         _ = ListNode(val, atIdx, atIdx.prv)
         self.size += 1
-        if self.size >= self.m + floor(sqrt(self.m)):
+        if self.size >= self.m + floor(sqrt(self.m)) - 1:
             self.buildMeta()
         else:
             self.retreat(idx)
@@ -93,7 +96,7 @@ class SqrtList:
         atIdx.prv.nxt = atIdx.nxt
         atIdx.nxt.prv = atIdx.prv
         self.size -= 1
-        if self.size <= self.m - floor(sqrt(self.m)):
+        if self.size <= self.m - floor(sqrt(self.m)) + 1:
             self.buildMeta()
         else:
             self.advance(idx)
