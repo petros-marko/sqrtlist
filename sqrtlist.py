@@ -4,34 +4,96 @@ from math import sqrt, floor
 
 class SqrtList:
     def __init__(self):
-        pass
+        self.size = 0
+        self.m = 0
+        self.meta = TransparentList()
+        self.head = ListNode()
+        self.tail = ListNode(None, None, self.head)
 
     def __str__(self):
-        pass
+        res = '['
+        curr = self.head.nxt
+        while curr != self.tail:
+            res += str(curr.val) + ', '
+            curr = curr.nxt
+        if self.size > 0:
+            res = res[:-2]
+        res += ']'#+ ' || ' + str(self.meta)
+        return res
 
     def __len__(self):
-        pass
+        return self.size
 
     def buildMeta(self):
-        pass
+        self.m = self.size
+        self.meta = TransparentList()
+        step = floor(sqrt(self.m))
+        if step == 0:
+            return
+        curr = self.head.nxt
+        for i in range(self.size):
+            if i % step == 0:
+                self.meta.insert(curr, len(self.meta))
+            curr = curr.nxt
 
     def getNode(self, idx):
-        pass
+        if idx > self.size:
+            return None
+        if self.m == 0:
+            return self.tail
+        mIdx = idx // floor(sqrt(self.m))
+        remaining = idx % floor(sqrt(self.m))
+        if mIdx >= len(self.meta):
+            mIdx -= 1
+            remaining += floor(sqrt(self.m))
+        curr = self.meta.get(mIdx)
+        for i in range(remaining):
+            curr = curr.nxt
+        return curr
 
     def advance(self, removalIdx):
-        pass
+        if self.m == 0:
+            return
+        startIdx = removalIdx // floor(sqrt(self.m))
+        if removalIdx % floor(sqrt(self.m)) != 0:
+            startIdx += 1
+        curr = self.meta.getNode(startIdx)
+        while curr.val != None:
+            curr.val = curr.val.nxt
+            curr = curr.nxt
 
     def retreat(self, insertionIdx):
-        pass
+        if self.m == 0:
+            return
+        startIdx = insertionIdx // floor(sqrt(self.m))
+        if insertionIdx % floor(sqrt(self.m)) != 0:
+            startIdx += 1
+        curr = self.meta.getNode(startIdx)
+        while curr.val != None:
+            curr.val = curr.val.prv
+            curr = curr.nxt
 
     def get(self, idx):
-        pass
+        return self.getNode(idx).val
 
     def set(self, val, idx):
-        pass
+        self.getNode(idx).val = val
 
     def insert(self, val, idx = 0):
-        pass
+        atIdx = self.getNode(idx)
+        _ = ListNode(val, atIdx, atIdx.prv)
+        self.size += 1
+        if self.size >= self.m + floor(sqrt(self.m)):
+            self.buildMeta()
+        else:
+            self.retreat(idx)
 
     def remove(self, idx):
-        pass
+        atIdx = self.getNode(idx)
+        atIdx.prv.nxt = atIdx.nxt
+        atIdx.nxt.prv = atIdx.prv
+        self.size -= 1
+        if self.size <= self.m - floor(sqrt(self.m)):
+            self.buildMeta()
+        else:
+            self.advance(idx)
