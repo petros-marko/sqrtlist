@@ -58,6 +58,9 @@ class SqrtList:
             startIdx += 1
         curr = self.meta.getNode(startIdx)
         while curr.val != None:
+            #this bug fix causes the runtime of remove to be very slow
+            #since buildMeta is slow
+            #should not work like this
             if curr.val.nxt.val != None:
                 curr.val = curr.val.nxt
             else:
