@@ -34,3 +34,5 @@ for i in range(10000):
         testee.set(i, wh)
         if str(tester) != str(testee).split(' || ')[0]:
             print('setting error')
+    print(tester)
+    print(testee)
