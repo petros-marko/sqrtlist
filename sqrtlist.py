@@ -18,7 +18,7 @@ class SqrtList:
             curr = curr.nxt
         if self.size > 0:
             res = res[:-2]
-        res += ']' + ' || ' + str(list(map(str,self.meta)))
+        res += ']'# + ' || ' + str(list(map(str,self.meta)))
         return res
 
     def __len__(self):
