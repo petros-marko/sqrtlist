@@ -18,13 +18,17 @@ class SqrtList:
             curr = curr.nxt
         if self.size > 0:
             res = res[:-2]
-        res += ']' + ' || ' + str(meta)
+        res += ']' + ' || ' + str(list(map(str,self.meta)))
         return res
 
     def __len__(self):
         return self.size
 
     def buildMeta(self):
+
+        self.meta = []
+        self.m = floor(sqrt(self.size))
+
         if self.m == 0:
             return
         curr = self.head.nxt
@@ -36,22 +40,64 @@ class SqrtList:
             i += 1
 
     def getNode(self, idx):
-        pass
+        if self.m == 0:
+            return self.tail
+        mIdx = idx // self.m
+        remn = idx % self.m
+        while mIdx >= len(self.meta):
+            mIdx -= 1
+            remn += self.m
+        curr = self.meta[mIdx]
+        while remn > 0:
+            curr = curr.nxt
+            remn -= 1
+        return curr
 
     def advance(self, rIdx):
-        pass
+        if self.m == 0 or rIdx >= self.m * len(self.meta):
+            return
+        mIdx = rIdx // self.m
+        if rIdx % self.m != 0:
+            mIdx += 1 
+        for i in range(mIdx, len(self.meta)):
+            self.meta[i] = self.meta[i].nxt
+            if self.meta[i] == None or self.meta[i].val == None:
+                self.meta.pop()
+                break
+
 
     def retreat(self, iIdx):
-        pass
+        if self.m == 0:
+            return
+        mIdx = iIdx // self.m
+        if iIdx % self.m != 0:
+            mIdx += 1
+        for i in range(mIdx, len(self.meta)):
+            self.meta[i] = self.meta[i].prv
 
     def get(self, idx):
-        return self.getNode(idx)[0].val
+        return self.getNode(idx).val
 
     def set(self, val, idx):
-        self.getNode(idx)[0].val = val
+        self.getNode(idx).val = val
 
     def insert(self, val, idx = 0):
-        pass
+        atIdx = self.getNode(idx)
+        _ = ListNode(val, atIdx, atIdx.prv)
+        self.size += 1
+        if self.size >= self.m ** 2 + self.m - 1:
+            self.buildMeta()
+        else:
+            self.retreat(idx)
 
     def remove(self, idx):
-        pass
+        atIdx = self.getNode(idx)
+        if atIdx.prv != None:
+            atIdx.prv.nxt = atIdx.nxt
+        if atIdx.nxt != None:
+            atIdx.nxt.prv = atIdx.prv
+        self.size -= 1
+        if self.size <= self.m ** 2 - self.m + 1:
+            self.buildMeta()
+        else:
+            self.advance(idx)

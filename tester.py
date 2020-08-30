@@ -4,7 +4,7 @@ from random import randint
 tester = []
 testee = SqrtList()
 
-for i in range(10000):
+for i in range(100000):
     cmd = randint(0, 3)
     if cmd == 0:
         wh = randint(0, len(tester))
