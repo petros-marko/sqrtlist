@@ -70,7 +70,9 @@ The \textit{Square Root List} is an idea I had after examining Linked Lists in m
 	\includegraphics[width=.7\textwidth]{./img/square_root_list.png}
 \end{figure}
 \section{Operation Runtime for the Square Root List}
-Before showing that the runtime is indeed what was claimed before, a point needs to be clarified. I said that the secondary list is about $\sqrt{n}$ elements long. That "about" means the following: because add and remove operations are contantly changing the length $n$ of the list, instead of constantly keeping up with those changes, the list uses another number $m$ as a stand-in for the length of the list. $m$ is updated in the buildMeta() method of the class, where it is set to be equal to the real size of the list. buildMeta is only called when the size of the list has diverged too much from the value of $m$.\\\\
+\subsection{Notes}
+Before showing that the runtime is indeed what was claimed before, a point needs to be clarified. I said that the secondary list is about $\sqrt{n}$ elements long. That "about" means the following: because add and remove operations are contantly changing the length $n$ of the list, instead of constantly keeping up with those changes, the list uses another number $m$ as a stand-in for the length of the list. $m$ is updated in the buildMeta() method of the class, where it is set to be equal to the real size of the list. buildMeta is only called when the size of the list has diverged too much from the value of $m$. When an insertion happens but the threshold for calling buildMeta is not surpassed, then retreat is called. retreat traverses the secondary list from the site of the insertion until the end and updates each stored node to be equal to its next node. This ensures that the chunks between two stored nodes remain equally sized and that the list works correctly. Similarly, when a removal happens, advance is called which works identically to retreat, but updates nodes to be their previous node instead of their next.
+\subsection{Proofs}
 Claim: $\sqrt{m}$ is bounded by $O(\sqrt{n})$.
 \begin{proof}
 	$ $\\
@@ -81,26 +83,26 @@ Claim: $\sqrt{m}$ is bounded by $O(\sqrt{n})$.
 	Therefore inequality (2) is satisfied by $\frac{1 - \sqrt{1 + 4n}}{2} \leq x \leq \frac{1 + \sqrt{1 + 4n}}{2}$.\\
 	This gives us that $0 \leq \sqrt{m} \leq \frac{1 + \sqrt{1 + 4n}}{2}$.\\
 	$\sqrt{m} \leq \frac{1}{2} + \frac{\sqrt{1 + 4n}}{2} \leq \frac{\sqrt{n}}{2} + \frac{\sqrt{5n}}{2}$\\
-	Thus $\sqrt{m} \leq \frac{\sqrt{5} + 1}{2}\sqrt{n}$ and therefore $\sqrt{m}$ is bounded by $O(\sqrt{n})$.\\
+	Thus $\sqrt{m} \leq \frac{\sqrt{5} + 1}{2}\sqrt{n}$ and therefore $\sqrt{m}$ is bounded by $O(\sqrt{n})$.
 
 \end{proof}
 
 Claim: The getNode(idx) method works in $O(\sqrt{n})$ time.
 \begin{proof}
 	$ $\\
-	In the worst case, getNode has to traverse the entire secondary list to find the node closest to the desired index. The length of the secondary list is, by its construction $\sqrt{m}$. Then, another traversal is needed, from the node stored in the secondary list up to the desired index. That traversal also has at most $\sqrt{m}$ nodes, since, the secondary list stores one node every $\sqrt{m}$ nodes. Thus, the entire traversal is at most $2\sqrt{m} - 1$ nodes long, which means that it is bounded by $O(\sqrt{m})$ and thus $O(\sqrt{n})$.\\
+	In the worst case, getNode has to traverse the entire secondary list to find the node closest to the desired index. The length of the secondary list is, by its construction $\sqrt{m}$. Then, another traversal is needed, from the node stored in the secondary list up to the desired index. That traversal also has at most $\sqrt{m}$ nodes, since, the secondary list stores one node every $\sqrt{m}$ nodes. Thus, the entire traversal is at most $2\sqrt{m} - 1$ nodes long, which means that it is bounded by $O(\sqrt{m})$ and thus $O(\sqrt{n})$.
 \end{proof}
 
 Claim: The get(idx) method works in $O(\sqrt{n})$ time.
 \begin{proof}
 	$ $\\
-	The method consists of a single call to getNode(idx)a field access. Since getNode(idx) works in $O(\sqrt{n})$ time, this method does too.\\
+	The method consists of a single call to getNode(idx)a field access. Since getNode(idx) works in $O(\sqrt{n})$ time, this method does too.
 \end{proof}
 
 Claim: The set(idx) method works in $O(\sqrt{n})$ time.
 \begin{proof}
 	$ $\\
-	The method consists of a single call to getNode(idx) and a value update. Since getNode(idx) works in $O(\sqrt{n})$ time, this method does too.\\
+	The method consists of a single call to getNode(idx) and a value update. Since getNode(idx) works in $O(\sqrt{n})$ time, this method does too.
 \end{proof}
 
 Claim: The insert(val, idx) method works in amortized $O(\sqrt{n})$ time.
@@ -109,13 +111,13 @@ Claim: The insert(val, idx) method works in amortized $O(\sqrt{n})$ time.
 	The method calls getNode(idx) which is $O(\sqrt{n})$ and then creates a new node (which takes constant time with respect to the length of the list).\\
 	In every call it will make a call to retreat(inseartionIdx), which traverses the entire secondary list and thus takes $O(\sqrt{m})$ time.\\
 	Once every $\sqrt{m}$ calls it will make a call to $buildMeta()$ which traverses the entire main list so it takes $O(n)$ time. Distributing the cost of that call over the $\sqrt{m}$ calls yields $O(\frac{n}{\sqrt{m}})$ time.\\
-	Therefore, overall, insert(val, idx) runs in $O(\sqrt{n}) + O(\sqrt{m}) + O(\frac{n}{\sqrt{m}})$ time, which is bounded by $O(\sqrt{n})$.\\
+	Therefore, overall, insert(val, idx) runs in $O(\sqrt{n}) + O(\sqrt{m}) + O(\frac{n}{\sqrt{m}})$ time, which is bounded by $O(\sqrt{n})$.
 \end{proof}
 
 Claim: The remove(idx) method works in amortized $O(\sqrt{n})$ time.
 \begin{proof}
 	$ $\\
-	This method works identically with the insert(val, idx) method, and therefore has the same runtime.\\
+	This method works identically with the insert(val, idx) method, and therefore has the same runtime.
 \end{proof}
 
 \end{document}
