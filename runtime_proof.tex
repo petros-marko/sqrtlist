@@ -63,7 +63,7 @@ A Linked List is a simple data structure consisting of what is usually referred 
 	\includegraphics[width=.5\textwidth]{./img/doubly_linked_list.png}
 \end{figure}
 \subsection{What is the Square Root List}
-The \textit{Square Root List} is an idea I had after examining Linked Lists in my Data Structures class and it is an attempt to improve on the runtime of the aforementioned operations by storing some extra pointers along with the real list. A second list is maintained, which stores pointers for about every $\sqrt{n}$ elements of the main list, where $n$ is the length of the main list. When an element of the main list needs to be accessed, instead of traversing the main list directly, the secondary list is traversed instead, thus "skipping" over many elements. When a point close to the desired element has been reached, the traversal of the main list starts and the element is reached. We will show later that this traversal is done in $O(\sqrt{n})$ time.
+The \textit{Square Root List} is an idea I had after examining Linked Lists in my Data Structures class and it is an attempt to improve on the runtime of the aforementioned operations by storing some extra pointers along with the real list. A second list is maintained, which stores pointers for about every $\sqrt{n}$ elements of the main list, where $n$ is the length of the main list. When an element of the main list needs to be accessed, instead of traversing the main list directly, the appropriate element is selected from the secondary list as the traversal starting point, thus "skipping" over many elements; then the traversal of the main list starts and the element is reached. We will show later that this traversal is done in $O(\sqrt{n})$ time.
 \begin{figure}[hbp]
 	\centering
 	\textbf{A Square Root List}\par\medskip
@@ -90,7 +90,7 @@ Claim: $\sqrt{m}$ is bounded by $O(\sqrt{n})$.
 Claim: The getNode(idx) method works in $O(\sqrt{n})$ time.
 \begin{proof}
 	$ $\\
-	In the worst case, getNode has to traverse the entire secondary list to find the node closest to the desired index. The length of the secondary list is, by its construction $\sqrt{m}$. Then, another traversal is needed, from the node stored in the secondary list up to the desired index. That traversal also has at most $\sqrt{m}$ nodes, since, the secondary list stores one node every $\sqrt{m}$ nodes. Thus, the entire traversal is at most $2\sqrt{m} - 1$ nodes long, which means that it is bounded by $O(\sqrt{m})$ and thus $O(\sqrt{n})$.
+	The appropriate starting node from the secondary list is selected in constant time. Then, a traversal is needed, from the node stored in the secondary list up to the desired index. That traversal has at most $\sqrt{m}$ nodes, since, the secondary list stores one node every $\sqrt{m}$ nodes. Thus, the entire traversal is at most $\sqrt{m} - 1$ nodes long, which means that it is bounded by $O(\sqrt{m})$ and thus $O(\sqrt{n})$.
 \end{proof}
 
 Claim: The get(idx) method works in $O(\sqrt{n})$ time.
